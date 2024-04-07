@@ -8,7 +8,7 @@ import { SignUp, Login } from "../Controllers/Usercontroller.js";
 
 
 router.post("/auth/signup", SignUp);
-router.get("/auth/login", Login);
+router.post("/auth/login", Login);
 
 
 export default router;
