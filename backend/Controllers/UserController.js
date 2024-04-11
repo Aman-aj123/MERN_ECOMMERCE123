@@ -107,5 +107,42 @@ const GetUser = async (req, res) => {
 }
 
 
+// Handling the Updateuser Action
+const UpdateUser = async (req, res) => {
+    try {
+        const User = await SignUpModel.findById(req.params.userId);
+        if (!User) {
+            return res.status(400).json({ sucess: false, error: `User  dosen't exists with this id: ${req.params.userId} ` });
+        };
 
-export { Login, SignUp, GetUser };
+        if (req.user.id.toString() !== req.params.userId) {
+            return res.status(400).json({ sucess: false, error: "Not allowed..." });
+        };
+
+        const { name, email, password } = req.body;
+        // hashing the password of the user  
+        const salt = await bcrypt.genSalt(8);
+        const securePassword = await bcrypt.hash(password, salt);
+
+        const updatedUser = {
+            name: name,
+            email: email,
+            password: securePassword
+        };
+       const finalUser =  await SignUpModel.findByIdAndUpdate(req.params.userId, { $set: updatedUser }, { new: true });
+
+        res.status(200).json({ sucess: true, message: "User has been sucessfully updated...", finalUser });
+
+    } catch (error) {
+        if (error.name === 'CastError' && error.kind === 'ObjectId') {
+            return res.status(404).json({ success: false, error: `User not found with id: ${req.params.userId}` });
+        }
+
+        console.log(`Some Internal server error occurs while Updating User with: ${error}`);
+        return res.status(500).json({ sucess: false, error: "Some Internal Server error occurs while Updating User..." });
+    }
+};
+
+
+
+export { Login, SignUp, GetUser, UpdateUser };
