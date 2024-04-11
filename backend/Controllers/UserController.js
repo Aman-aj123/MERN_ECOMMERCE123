@@ -10,36 +10,49 @@ import SignUpModel from "../Models/SignUp.js";
 // Handling the SignUp Action
 const SignUp = async (req, res) => {
     const { name, email, password } = req.body;
+
     try {
         const hasAlreadyUser = await SignUpModel.findOne({ email: email });
         // If the Already exists with the same email
         if (hasAlreadyUser) {
-            res.status(400).json({ sucess: false, error: "User with this email Already exists.." });
+            return res.status(400).json({ sucess: false, error: "User with this email Already exists.." });
         };
 
-        // hashing the password of the user
+        // hashing the password of the user  
         const salt = await bcrypt.genSalt(8);
         const securePassword = await bcrypt.hash(password, salt);
+
+        let role = "user";
+
+        // Creating a admin user
+        if (email === process.env.Admin_Email && password === process.env.Admin_Password) {
+            role = "admin"
+        }
 
         // Creating the user
         const createdUser = await SignUpModel.create({
             name: name,
             email: email,
-            password: securePassword
+            password: securePassword,
+            role: role
         });
 
-        // Sending the JsonwebToken
+
+        // Sending the JsonwebToken to the user
         const data = {
-            id: createdUser._id
+            user: {
+                id: createdUser._id
+            }
         };
         const token = JWT.sign(data, process.env.JWT_SECRET);
 
-        res.status(200).json({ sucess: true, message: `SignUp Sucessfully with '${name}' `, authToken: token });
+        return res.status(200).json({ sucess: true, message: `SignUp Sucessfully with '${name}' `, authToken: token });
 
     } catch (error) {
         // If the error occurs
-        console.log(`Some Error Occurs while creating user.. with: ${error}`)
+        console.log(`Some Error Occurs while creating user.. with: ${error}`);
         res.status(500).json({ sucess: false, error: "Some Internal Server Error Occurs While SignUp.." });
+        return;
     }
 };
 
@@ -50,31 +63,49 @@ const Login = async (req, res) => {
     const { email, password } = req.body;
     try {
         const hasUser = await SignUpModel.findOne({ email: email });
-        // If the Email is envalied
+        // If the Email is Invalied
         if (!hasUser) {
-            res.status(401).json({ sucess: false, error: "Invalied email Please try again..." });
+            return res.status(401).json({ sucess: false, error: "Invalied email Please try again..." });
         };
 
-        const isCorrectPassword = bcrypt.compare(password, hasUser.password);
-        // If the Password is envalied
+        const isCorrectPassword = await bcrypt.compare(password, hasUser.password);
+        // If the Password is Invalied
         if (!isCorrectPassword) {
-            res.status(400).json({sucess: false, error: "Envalied Password Please try again..."});
+            return res.status(400).json({ sucess: false, error: "Invalied Password Please try again..." });
         }
 
         // Sending the jsonWebToken
-         const data = {
-            user: hasUser._id
-         };
-         const token = JWT.sign(data, process.env.JWT_SECRET);
+        const data = {
+            user: {
+                id: hasUser._id
+            }
+        };
+        const token = JWT.sign(data, process.env.JWT_SECRET);
 
-         res.status(200).json({sucess: true, message: "You has been login sucessfully..", authToken: token})
+        return res.status(200).json({ sucess: true, message: "You has been login sucessfully..", authToken: token })
 
     } catch (error) {
         res.status(500).json({ sucess: false, error: "Some Error Occurs While Login..." });
         console.log(`Some Error Occurs while Login with: ${error}`);
+        return;
     };
 };
 
 
 
-export { Login, SignUp };
+// Handling the get user Action
+const GetUser = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        const User = await SignUpModel.findById(userId).select("-password");
+        res.status(200).json({ sucess: true, message: "User has sucessfully finded...", User });
+    } catch (error) {
+        console.log(`Some Internal server error occurs while getting user with: ${error}`);
+        return res.status(500).json({ sucess: false, error: "Some Internal server error occurs while Getting user.." });
+    }
+}
+
+
+
+export { Login, SignUp, GetUser };

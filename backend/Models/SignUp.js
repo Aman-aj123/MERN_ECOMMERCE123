@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const SignUpModel = mongoose.Schema({
     name: {
@@ -13,10 +13,15 @@ const SignUpModel = mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    role: {
+        type: String,
+        required: true,
+        default: "user"
     }
 },
     {
-        timeStamps: true
+        timestamps: true
     }
 );
 
