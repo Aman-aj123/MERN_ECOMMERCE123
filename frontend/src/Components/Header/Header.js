@@ -1,5 +1,11 @@
 import "./Header.css"
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartArrowDown, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
+
+
 const Header = () => {
     return (
         <div className="Header" id="Header">
@@ -9,23 +15,25 @@ const Header = () => {
                     <div className="left-menus flex items-center">
                         <h2 className="logo">Trendio Fashion's</h2>
                         <div className="searchBar flex justify-between items-center ">
-                            <i className="fa-solid fa-magnifying-glass search-icon"></i>
+                            <FontAwesomeIcon icon={faSearch} className="search-icon primary-hover" />
                             <input type="search" className="w-full h-full" placeholder="Search for trendio Fashion's World" />
                         </div>
-                        <div className="login-box auth-box flex items-center">
-                            <i class="fa-solid fa-user"></i>
-                            <p>Login</p>
+                        <div className="flex items-center cursor-pointer main-search-icon">
+                            <FontAwesomeIcon icon={faSearch} className="common-icon" />
+                        </div>
+                        <div className="Cart-icon flex items-center cursor-pointer">
+                            <div className="cart-item-num">0</div>
+                            <FontAwesomeIcon icon={faCartArrowDown} className="common-icon" />
                         </div>
                     </div>
 
                     <div className="right-menus flex">
-                        <div className="Signup-box auth-box flex items-center">
-                            <i class="fa-solid fa-user"></i>
-                            <p>Signup</p>
+                        <div className="login-box auth-box flex items-center">
+                            <FontAwesomeIcon icon={faUser} className="" />
+                            <p>Login</p>
                         </div>
                         <div className="Signup-box auth-box flex items-center">
-                            <i class="fa-solid fa-user"></i>
-                            <p>Cart</p>
+                            <p>Signin</p>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 #Top-header-wrapper {
     width: 100%;
-    height: 60px;
+    height: 60px; 
     background: white;
 }
 
@@ -15,7 +15,7 @@
 
 
 .Top-header .searchBar {
-    width: 43vw;
+    width: 47vw;
     height: 40px;
     background: rgba(233, 131, 194, 0.162);
     border-radius: 8px;
@@ -42,12 +42,13 @@
 
 .Top-header .searchBar .search-icon {
     cursor: pointer;
+    font-size: 17px;
 }
 
 
 .Top-header .right-menus {
     width: auto;
-    gap: 5px;
+    gap: 12px;
 }
 
 .Top-header .auth-box {
@@ -66,11 +67,32 @@
     color: white;
 }
 
+.Top-header .left-menus .Cart-icon {
+    position: relative;
+}
+.left-menus .Cart-icon .cart-item-num{
+    position: absolute;
+    top: -14px;
+    right: -8px;
+    padding: 0px 6.30px;
+    border-radius: 50%;
+    background: red;
+    color: white;
+}
 
-
+.Top-header .left-menus .main-search-icon {
+    display: none;
+}
+ 
+/* Bottom header  */
 .Bottom-header {
     background: rgba(233, 131, 194, 0.162);
     padding: 8px 0;
+    overflow-x: auto;
+}
+
+.Bottom-header::-webkit-scrollbar{
+    display: none;
 }
 
 .Bottom-header-wrapper {
@@ -86,3 +108,4 @@
 .Bottom-header-wrapper p:hover {
     color: var(--primary-color);
 }
+

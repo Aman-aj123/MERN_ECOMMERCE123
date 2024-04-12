@@ -1,0 +1,33 @@
+#Hero {
+    height: 80vh;
+}
+
+
+.swiper-slide img {
+    height: 80vh;
+    object-fit: cover;
+}
+
+.swiper-button-prev,
+    .swiper-button-next {
+        background: rgb(255, 255, 255) !important;
+        width: 40px !important;
+        border-radius: 2px;
+        height: 70px !important;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .swiper-button-prev:after,
+    .swiper-button-next:after {
+        font-size: 34px !important;
+    }
+
+    .swiper-button-prev {
+        position: absolute !important;
+        left: -5px !important;
+    }
+
+    .swiper-button-next {
+        position: absolute !important;
+        right: -5px !important;
+    }

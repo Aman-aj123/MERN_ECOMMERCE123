@@ -12,6 +12,13 @@
   --primary-color: rgb(240, 38, 146);
 }
 
+body,
+html {
+  width: 100%;
+  overflow-x: hidden;
+  background: rgb(244, 240, 240);
+}
+
 
 /*---------- Staring Defining Utility classes -------  */
 .flex {
@@ -60,14 +67,34 @@
   width: 95%;
 }
 
-.mx-auto{
+.mx-auto {
   margin: auto;
 }
+
+.primary-hover {
+  transition: .2s ease-in-out;
+}
+
+.primary-hover:hover {
+  color: rgb(240, 38, 146);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.common-icon {
+  font-size: 22px;
+  color: var(--primary-color);
+}
+
+.common-icon:hover {
+  font-size: 21px;
+}
+
 
 /*---------- Ending Defining Utility classes -------  */
 
 
 
-body {
-  background: rgb(236, 232, 232);
-}
+ 

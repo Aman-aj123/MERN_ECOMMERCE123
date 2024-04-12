@@ -1,0 +1,33 @@
+.Top-Products{
+    margin-top: 15px;
+}
+
+.Top-Products-wrapper {
+    padding: 5px auto;
+    background: white;
+}
+
+
+.Top-Products-wrapper .Top-Products-Items {
+    width: 180px;
+    height: 270px;
+    padding: 5px;
+    padding-top: 2px;
+}
+
+.Top-Products-Items .product-img {
+    height: 160px;
+}
+
+.Top-Products-Items h2 {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.1;
+    color: rgb(42, 41, 41);
+}
+
+.Top-Products-Items p {
+    line-height: 1.1;
+    font-size: 14px;
+    margin-top: 2px;
+}
