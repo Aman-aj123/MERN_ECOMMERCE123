@@ -17,12 +17,16 @@ app.get("/", (req, res) => {
 
 //--------> Custom Routes
 import UserRoute from "./Routes/UserRoute.js";
-import adminRoute from "./Routes/adminRoute.js"
+import adminRoute from "./Routes/adminRoute.js";
+import CartRoute from "./Routes/CartRoute.js";
+import ProductRoute from "./Routes/ProductRoute.js"
+
 app.use("/api/user", UserRoute);
 app.use("/api/admin", adminRoute);
-
+app.use("/api/cart", CartRoute);
+app.use("/api/products", ProductRoute)
 
 
 
 //-----> STARTING THE SERVER
-app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`))
+app.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));                             

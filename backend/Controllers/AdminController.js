@@ -22,7 +22,7 @@ const addProduct = async (req, res) => {
 
     const mainAboutProduct = aboutProduct.split("#").filter(e => e !== "");
     const trimmedSize = size.trim().split(",").map(itm => itm.trim());
-    const trimmedImages = images.trim().split(",").map(itm => itm.trim());
+    const trimmedImages = images.trim().split("#").filter(itm => itm!== "");
 
     try {
         const Product = await ProductSchema.create({
@@ -81,7 +81,7 @@ const updateProduct = async (req, res) => {
 
         const mainAboutProduct = aboutProduct.split("#").filter(e => e !== "");
         const trimmedSize = size.trim().split(",").map(itm => itm.trim());
-        const trimmedImages = images.trim().split(",").map(itm => itm.trim());
+        const trimmedImages = images.trim().split("#").filter(itm => itm !== "");
 
         // Updated Product
         const updatedProduct = {
