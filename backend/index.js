@@ -1,11 +1,11 @@
 import express from "express";
 const app = express();
-const PORT = 3000;
+const PORT = 5000;
 
 import connectToMongoose from "./db.js";
 import cors from "cors";
 app.use(cors());
-app.use(express.json());
+app.use(express.json()); 
 
 // Connecting to mongodb database
 connectToMongoose();

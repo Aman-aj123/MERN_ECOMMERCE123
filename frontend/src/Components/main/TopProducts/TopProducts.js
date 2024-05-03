@@ -146,4 +146,5 @@ const TopProducts = () => {
 }
 
 
-export default TopProducts;
+
+export default TopProducts; 
