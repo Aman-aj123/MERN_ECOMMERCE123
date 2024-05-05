@@ -1,16 +1,20 @@
-import { BrowserRoute, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Home from "./Pages/Home";
 import ProductsState from "./Context/ProductsState";
 
 
 function App() {
+
+
   return (
-    <BrowserRoute>
-      <Routes>
-        <Route path="/" element={<Home />} />
-      </Routes>
-    </BrowserRoute>
+    <BrowserRouter>
+      <ProductsState>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </ProductsState>
+    </BrowserRouter>
   );
 }
 

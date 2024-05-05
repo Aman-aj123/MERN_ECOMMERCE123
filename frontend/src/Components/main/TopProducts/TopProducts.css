@@ -15,9 +15,10 @@
 .Top-Products-wrapper .Top-Products-Items {
     height: fit-content;
     padding: 4px;
-    margin-top: 3px;
+    margin-top: 3px; 
     min-width: 170px;
     cursor: pointer;
+    position: relative;
 }
 
 
@@ -32,16 +33,40 @@
 }
 
 .Top-Products-Items h2 {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
     line-height: 1.1;
     color: rgb(42, 41, 41);
 }
 
-.Top-Products-Items h3 {
-    margin: 2px auto;
+.Top-Products-Items .product-desc {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.1;
+}
+
+.price-wrapper {
+    gap: 10px;
+    margin: 3px auto;
+}
+
+.price-wrapper .oldPrice {
+    text-decoration: line-through;
+}
+
+.Top-Products-Items .currentPrice,
+.oldPrice {
     font-weight: 500;
-    font-size: 17px;
+    font-size: 16px;
+    width: fit-content;
+}
+
+.Top-Products-Items .product-discount {
+    color: green; 
+    font-weight: 500;
+    position: absolute;
+    top: 10px;
+    right: -5px;
 }
 
 .Top-Products-Items p {
@@ -49,14 +74,14 @@
     font-size: 14px;
 }
 
- 
+
 
 .slider-icn-wrapper {
     float: right;
     margin-bottom: 7px;
 }
 
-.slider-icn-wrapper{
+.slider-icn-wrapper {
     gap: 7px;
 }
 
@@ -71,6 +96,6 @@
 }
 
 
-.slider-buttons .slider-btn:hover{
+.slider-buttons .slider-btn:hover {
     opacity: .5;
 }
