@@ -17,6 +17,7 @@
     padding: 4px;
     margin-top: 3px; 
     min-width: 170px;
+    max-width: 200px;
     cursor: pointer;
     position: relative;
 }
@@ -24,13 +25,10 @@
 
 .Top-Products-Items .product-img {
     height: 155px;
-    width: 100%;
-    transition: .2s ease-in-out;
+    width: 100%; 
 }
 
-.Top-Products-Items .product-img:hover {
-    transform: scale(1.09);
-}
+ 
 
 .Top-Products-Items h2 {
     font-size: 14px;
@@ -65,7 +63,8 @@
     color: green; 
     font-weight: 500;
     position: absolute;
-    top: 10px;
+    font-size: 14px;
+    top: 3px;
     right: -5px;
 }
 
@@ -98,4 +97,28 @@
 
 .slider-buttons .slider-btn:hover {
     opacity: .5;
+}
+/* disabled-btn  */
+.disabled-btn{
+    pointer-events: none;
+    opacity: .2;
+}
+
+.totalPages{
+    float: right;
+    clear: both;
+    line-height: 1;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+
+
+.loading-img{
+    width: 250ox; 
+    height: 84px;
+}
+
+.loading-wrapper{
+    gap: 10px;
 }
