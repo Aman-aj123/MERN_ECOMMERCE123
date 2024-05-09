@@ -10,11 +10,12 @@ import FetchProducts from "../../../Api/Fetch_Products";
 
 
 
-const TopProducts = () => {
+const TopProducts = ({ productCategory, productClass }) => {
 
     const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1); 
+    const [page, setPage] = useState(1);
     const limit = process.env.REACT_APP_API_LIMIT;
     const URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=page&limit=${limit}`;
 
@@ -26,7 +27,18 @@ const TopProducts = () => {
 
     const fetchData = async () => {
         const response = await FetchProducts(URL);
-        setProducts(response); 
+        setProducts(response);
+
+        let mainItems = [];
+
+        if(productCategory.toLowerCase() === "all"){
+            mainItems = response?.response?.productItems;
+            setFilteredProducts(mainItems);
+        } else {
+            mainItems = response?.response.productItems.filter(element=> element.category === productCategory);
+            setFilteredProducts(mainItems);
+        }
+
         setLoading(false);
     };
 
@@ -54,8 +66,8 @@ const TopProducts = () => {
         <div className="Top-Products">
             <div className="slider-buttons primary-width">
                 <div className="slider-icn-wrapper flex">
-                    <FontAwesomeIcon onClick={handlePrev} icon={faArrowLeft}   className={`slider-btn ${page <=1 ? "disabled-btn" : ""}`} />
-                    <FontAwesomeIcon onClick={handleNext} icon={faArrowRight}  className={`slider-btn ${page >= products?.response?.totalPages ? "disabled-btn" : ""}`} />
+                    <FontAwesomeIcon onClick={handlePrev} icon={faArrowLeft} className={`slider-btn ${page <= 1 ? "disabled-btn" : ""}`} />
+                    <FontAwesomeIcon onClick={handleNext} icon={faArrowRight} className={`slider-btn ${page >= products?.response?.totalPages ? "disabled-btn" : ""}`} />
                 </div>
                 <div className="primary-width mx-auto">
                     <p className="totalPages ">{page} of {products?.response?.totalPages}</p>
@@ -63,8 +75,8 @@ const TopProducts = () => {
             </div>
 
             <div className="Top-Products-wrapper mx-auto primary-width flex">
-                {products?.response?.productItems.map((item, index) => (
-                    <div key={index} className="Top-Products-Items">
+                {filteredProducts.map((item, index) => (
+                    <div key={index} className={`Top-Products-Items ${productClass}`}>
                         <img className="w-full product-img" src={item?.images[0]} />
                         <h2 className="w-full product-title">{item?.title.slice(0, 30)}...</h2>
                         <div className="price-wrapper flex">
@@ -89,6 +101,13 @@ const TopProducts = () => {
             </div>
         </div>
     );
+}
+
+
+
+TopProducts.defaultProps = {
+    productCategory: "all",
+    productClass: ""
 }
 
 
