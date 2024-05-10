@@ -17,7 +17,7 @@ const TopProducts = ({ productCategory, productClass }) => {
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const limit = process.env.REACT_APP_API_LIMIT;
-    const URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=page&limit=${limit}`;
+    const URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=${limit}`;
 
     const limitArr = [];
 
@@ -31,11 +31,11 @@ const TopProducts = ({ productCategory, productClass }) => {
 
         let mainItems = [];
 
-        if(productCategory.toLowerCase() === "all"){
+        if (productCategory.toLowerCase() === "all") {
             mainItems = response?.response?.productItems;
             setFilteredProducts(mainItems);
         } else {
-            mainItems = response?.response.productItems.filter(element=> element.category === productCategory);
+            mainItems = response?.response.productItems.filter(element => element.category === productCategory);
             setFilteredProducts(mainItems);
         }
 
@@ -48,16 +48,14 @@ const TopProducts = ({ productCategory, productClass }) => {
     }, [page]);
 
 
-
-    const handlePrev = () => {
-        setPage(page - 1);
-        console.log(page)
-    };
-
     const handleNext = () => {
         setPage(page + 1);
-        console.log(page)
     };
+    const handlePrev = () => {
+        setPage(page - 1);
+    };
+
+
 
 
 
@@ -75,7 +73,7 @@ const TopProducts = ({ productCategory, productClass }) => {
             </div>
 
             <div className="Top-Products-wrapper mx-auto primary-width flex">
-                {filteredProducts.map((item, index) => (
+                {filteredProducts?.map((item, index) => (
                     <div key={index} className={`Top-Products-Items ${productClass}`}>
                         <img className="w-full product-img" src={item?.images[0]} />
                         <h2 className="w-full product-title">{item?.title.slice(0, 30)}...</h2>

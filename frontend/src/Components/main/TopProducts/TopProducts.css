@@ -108,6 +108,7 @@
 .disabled-btn{
     pointer-events: none;
     opacity: .2;
+    cursor: no-drop !important;
 }
 
 .totalPages{

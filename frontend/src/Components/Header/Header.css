@@ -9,8 +9,9 @@
     gap: 18px;
 }
 
-.Top-header .logo {
+.Top-header .logo a {
     color: var(--primary-color);
+    text-decoration: none;
 }
 
 

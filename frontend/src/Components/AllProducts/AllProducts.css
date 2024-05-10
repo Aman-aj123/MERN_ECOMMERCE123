@@ -5,7 +5,7 @@
 /*---------> Left Side  */
 .left-side {
     padding-top: 10px;
-    width: 25%; 
+    width: 25%;
     background: white;
 }
 
@@ -16,14 +16,14 @@
     border-bottom: 2px solid gainsboro;
 }
 
-.left-side .Option-items:nth-last-child(1){
+.left-side .Option-items:nth-last-child(1) {
     border-bottom: none !important;
 }
 
 .left-side .Option-items .main-value {
     gap: 10px;
     font-size: 14px;
-    letter-spacing: .30px; 
+    letter-spacing: .30px;
     font-weight: 500;
     margin-bottom: 2px;
     color: rgb(86, 83, 83);
@@ -45,9 +45,10 @@
     font-weight: 500;
     letter-spacing: .30px;
 }
+
 .Option-items .main-value select option {
     font-weight: 500;
-    color:rgb(64, 63, 63);
+    color: rgb(64, 63, 63);
     letter-spacing: .30px;
 }
 
@@ -196,6 +197,40 @@
     cursor: no-drop !important;
     opacity: .2 !important;
 }
+
+
+.color-wrapper {
+    gap: 6px;
+}
+
+.colorItems {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgb(103, 101, 101);
+}
+
+/* Loader  */
+.main-loading-wrapper {
+    width: 100%;
+    height: 100vh;
+    z-index: 99999;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+
+.main-loading-wrapper img {
+    width: 120px;
+}
+
+
+
+
 
 
 

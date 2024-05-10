@@ -15,13 +15,12 @@ const AllProducts = ({ productCategory }) => {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [lowestPrice, setLowestPrice] = useState([]);
-    const [highestPrice, setHighestPrice] = useState([]);
     const [page, setPage] = useState(1);
     const limit = process.env.REACT_APP_API_LIMIT;
-    const URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=page&limit=${limit}`;
+    const URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=${limit}`;
 
 
+    // Fetching products data from api
     const fetchData = async () => {
         const response = await FetchProducts(URL);
         setProducts(response);
@@ -32,53 +31,83 @@ const AllProducts = ({ productCategory }) => {
             mainItems = response?.response?.productItems;
             setFilteredProducts(mainItems);
         } else {
-            mainItems = response?.response.productItems.filter(element => element.category === productCategory);
+            mainItems = response?.response?.productItems.filter(element => element.category === productCategory);
             setFilteredProducts(mainItems);
         }
-
-        const mainLowestPrice = response?.response?.productItems.sort((a,b)=> a.currentPrice - b.currentPrice);
-        const mainHighestPrice = response?.response?.productItems.sort((a,b)=> b.currentPrice - a.currentPrice);
-
-
-        setLowestPrice(mainLowestPrice[0].currentPrice);
-        setHighestPrice(mainHighestPrice[0].currentPrice);
-
         setLoading(false);
     };
 
+    // Storing minPrice 
+    const price = filteredProducts?.map(element => element.currentPrice);
+    const minPrice = Math.min(...price);
+
+    // Storing discounts
+    const discount = filteredProducts?.map(element => parseInt(element.discount));
+    const minDiscount = Math.min(...discount);
+
+
+    // Storing Colors
+    let colors = [];
+    filteredProducts?.forEach(element => colors.push(element.varients.color));
+    const uniqueColors = Array.from(new Set(colors));
+
+    // Storing Sizes
+    let size = [];
+    filteredProducts?.forEach(element => size.push(element.varients.size));
+    const mergedSize = size.flat().filter((item, index, self) => self.indexOf(item) === index);
+    const uniqueSize = Array.from(new Set(mergedSize));
+
+    // Storing categories
+    const categories = [];
+    filteredProducts?.forEach(element => categories.push(element.category));
+    const uniqueCategory = Array.from(new Set(categories));
+
+    // Storing Ratings
+    const ratings = [];
+    filteredProducts?.forEach(element => ratings.push(element.ratings));
+    const uniqueRatings = Array.from(new Set(ratings));
+
+    // Pushing all the pages in array
     const allPages = [];
-    for (let i = 0; i <= products?.response?.totalPages.length; i++) {
-        allPages.push(i);
+    for (let i = 0; i <= parseInt(products?.response?.totalPages); i++) {
         allPages.push(i);
     }
 
-    const slicedPages = allPages.slice(0, 3);
+    // taking 3 pages numbers
+    const slicedPages = allPages.slice(1, 4);
 
 
+    // Handling Next Page
     const handleNextPage = () => {
-
+        window.scroll(0, 0)
+        setPage(page + 1);
     }
-
+    // Handling Prev Page
     const handlePrevPage = () => {
-
+        window.scroll(0, 0)
+        setPage(page - 1);
     }
 
+    // Handling Last Page
     const handleLastPage = () => {
+        window.scroll(0, 0);
+        setPage(products?.response?.totalPages)
     }
 
-    const handleOtherPage = () => {
-
+    // Handling Other Page
+    const handleOtherPage = (element) => {
+        window.scroll(0, 0);
+        setPage(parseInt(element));
     }
 
-    console.log(`highest Price is: ${highestPrice}`)
-    console.log(`Lowest Price is : ${lowestPrice}`)
 
     useEffect(() => {
         setLoading(true);
         fetchData();
     }, [page]);
 
-    
+
+
 
     return (
 
@@ -87,28 +116,56 @@ const AllProducts = ({ productCategory }) => {
             <div className="left-side">
                 <div className="Option-wrapper w-full">
                     <div className="Option-items align-items">
+                        <h2 className="option-title">Categories</h2>
+                        {uniqueCategory?.map((element, index) => (
+                            <div key={index} className="main-value flex align-items"><label htmlFor={`${index}`}>{element}</label><input type="checkbox" id={`${index}`} className="checkbox" /> </div>
+                        ))}
+                    </div>
+                    <div className="Option-items align-items">
                         <h2 className="option-title">Sort</h2>
                         <div className="main-value flex align-items">
-                            <select>
-                                <option disabled selected >Select</option>
+                            <select defaultProps="Select">
+                                <option disabled selected >Sort by Price</option>
                                 <option>Lowest to Highest</option>
                                 <option>Highest to Lowest</option>
                             </select>
                         </div>
-                        <div className="main-value flex align-items"><label for="price">Sort By Name</label><input type="checkbox" id="price" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label for="price">A to Z</label><input type="checkbox" id="price" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="Sort">Sort By Name</label><input type="checkbox" id="Sort" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="A-to-Z">A to Z</label><input type="checkbox" id="A-to-Z" className="checkbox" /> </div>
                     </div>
                     <div className="Option-items align-items">
                         <h2 className="option-title">Price</h2>
-                        <div className="main-value flex align-items"><label for="price">₹{lowestPrice} to ₹{highestPrice - 100}</label><input type="checkbox" id="price" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label for="price">₹{lowestPrice} to ₹{highestPrice - 200}</label><input type="checkbox" id="price" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label for="price">₹{lowestPrice} to ₹{highestPrice - 600}</label><input type="checkbox" id="price" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="priceOne">Under ₹{minPrice + 50}</label><input type="checkbox" id="priceOne" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="priceTwo">Under ₹{minPrice + 100}</label><input type="checkbox" id="priceTwo" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="priceThree">Under ₹{minPrice + 200}</label><input type="checkbox" id="priceThree" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="priceFour">Under ₹{minPrice + 400}</label><input type="checkbox" id="priceFour" className="checkbox" /> </div>
                     </div>
                     <div className="Option-items align-items">
-                        <h2 className="option-title">Price</h2>
-                        <div className="main-value flex align-items"><label for="price">₹100 to ₹5000</label><input type="checkbox" id="price" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label for="price">₹100 to ₹5000</label><input type="checkbox" id="price" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label for="price">₹100 to ₹5000</label><input type="checkbox" id="price" className="checkbox" /> </div>
+                        <h2 className="option-title">Color</h2>
+                        <div className="color-wrapper flex flex-wrap">
+                            {uniqueColors?.map((element, index) => (
+                                <div key={index} style={{ backgroundColor: `${element}` }} className="colorItems"></div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="Option-items align-items">
+                        <h2 className="option-title">Discount</h2>
+                        <div className="main-value flex align-items"><label htmlFor="discountOne">Under {minDiscount}%</label><input type="checkbox" id="discountOne" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="discountTwo">Under {minDiscount + 10}%</label><input type="checkbox" id="discountTwo" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="discountThree">Under {minDiscount + 15}%</label><input type="checkbox" id="discountThree" className="checkbox" /> </div>
+                        <div className="main-value flex align-items"><label htmlFor="discountFour">Under {minDiscount + 20}%</label><input type="checkbox" id="discountFour" className="checkbox" /> </div>
+                    </div>
+                    <div className="Option-items align-items">
+                        <h2 className="option-title">Size</h2>
+                        {uniqueSize?.map((element, index) => (
+                            <div key={index} className="main-value flex align-items"><label htmlFor={`${index}`}>{element}</label><input type="checkbox" id={`${index}`} className="checkbox" /> </div>
+                        ))}
+                    </div>
+                    <div className="Option-items align-items">
+                        <h2 className="option-title">Ratings</h2>
+                        {uniqueRatings?.map((element, index) => (
+                            <div key={index} className="main-value flex align-items"><label htmlFor={`${index}`}>{element}</label><input type="checkbox" id={`${index}`} className="checkbox" /> </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -145,13 +202,13 @@ const AllProducts = ({ productCategory }) => {
                     <div className='pagination'>
                         <h4 className="pagination-title">Pagination</h4>
                         <div className="pagination-wrapper">
-                            <button disabled={page <= 1 ? true : false} className={`pagination-btn next ${page <= 1 ? "disabled-btn" : ""}`} onClick={handlePrevPage}><i className="fas fa-angle-left"></i></button>
-                            {slicedPages.map((element, index) => (
+                            <button disabled={page <= 1 ? true : false} className={`pagination-btn next ${page <= 1 ? "disabled-btn" : ""}`} onClick={handlePrevPage}><FontAwesomeIcon icon={faArrowLeft} /></button>
+                            {slicedPages?.map((element, index) => (
                                 <button onClick={() => { handleOtherPage(element) }} className={`pagination-btn ${element === products?.response?.currentPage ? "active-page" : ""}`} key={index}>{element}</button>
                             ))
                             }
                             <button onClick={handleLastPage} className='pagination-btn'>... {products?.response?.totalPages}</button>
-                            <button disabled={page >= products?.response?.totalPages ? true : false} className={`pagination-btn next ${page >= products?.response?.totalPages ? "disabled-btn" : ""}`} onClick={handleNextPage}><i className="fas fa-angle-right"></i></button>
+                            <button disabled={page >= products?.response?.totalPages ? true : false} className={`pagination-btn next ${page >= products?.response?.totalPages ? "disabled-btn" : ""}`} onClick={handleNextPage}><FontAwesomeIcon icon={faArrowRight} /></button>
                         </div>
                     </div>
 

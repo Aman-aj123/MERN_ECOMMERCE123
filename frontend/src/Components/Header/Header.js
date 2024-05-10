@@ -1,3 +1,6 @@
+import React from "react"
+import { Link } from 'react-router-dom';
+
 import "./Header.css"
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -7,13 +10,15 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 
 const Header = () => {
+
+
     return (
         <div className="Header" id="Header">
             {/* Top Header  */}
             <div id="Top-header-wrapper">
                 <div className="Top-header h-full mx-auto items-center flex primary-width justify-between">
                     <div className="left-menus flex items-center">
-                        <h2 className="logo">Trendio Fashion's</h2>
+                        <h2 className="logo"><Link to="/">Trendio Fashion's </Link></h2>
                         <div className="searchBar flex justify-between items-center ">
                             <FontAwesomeIcon icon={faSearch} className="search-icon primary-hover" />
                             <input type="search" className="w-full h-full" placeholder="Search for trendio Fashion's World" />
@@ -30,10 +35,10 @@ const Header = () => {
                     <div className="right-menus flex">
                         <div className="login-box auth-box flex items-center">
                             <FontAwesomeIcon icon={faUser} className="" />
-                            <p>Login</p>
+                            <p>SignUp</p>
                         </div>
                         <div className="Signup-box auth-box flex items-center">
-                            <p>Signin</p>
+                            <p>SignIn</p>
                         </div>
                     </div>
                 </div>
