@@ -6,66 +6,90 @@ import { faArrowLeft, faArrowRight, faArrowsLeftRight } from "@fortawesome/free-
 import FetchProducts from "../../Api/Fetch_Products"
 
 import { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
+const AllProducts = () => {
 
-const AllProducts = ({ productCategory }) => {
+    const navigate = useNavigate();
 
+
+    const url = window.location.href;
+    const searchParams = new URLSearchParams(url);
+
+    // Extracting productCategory from the url
+    const productCategory = searchParams.get('category');
+    // Extracting pageQuery from the url
+    const pageQuery = searchParams.get("page");
+
+   
+
+    //----> Defining useState variables
     const [products, setProducts] = useState([]);
-    const [filteredProducts, setFilteredProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(pageQuery === null ? 1 : parseInt(pageQuery));
     const limit = process.env.REACT_APP_API_LIMIT;
-    const URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=${limit}`;
+
+    const [category, setCategory] = useState(productCategory === null ? "all" : productCategory);
+    const [allCategory, setAllCategory] = useState([]);
+
+ 
 
 
-    // Fetching products data from api
+    //-------> Fetching products data from api
     const fetchData = async () => {
-        const response = await FetchProducts(URL);
-        setProducts(response);
+        setLoading(true);
 
-        let mainItems = [];
+        let URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=1`;
 
-        if (productCategory.toLowerCase() === "all") {
-            mainItems = response?.response?.productItems;
-            setFilteredProducts(mainItems);
-        } else {
-            mainItems = response?.response?.productItems.filter(element => element.category === productCategory);
-            setFilteredProducts(mainItems);
-        }
-        setLoading(false);
+        try {
+            if (category === null || category === "all") {
+                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=1`;
+            } else {
+                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products/category/${category}?page=${page}&limit=1`;
+            }
+
+            const response = await FetchProducts(URL);
+            setProducts(response);
+
+
+            setLoading(false);
+
+        } catch (error) {
+            console.log(`Some Error occurs while fetching data with: ${error}`);
+        };
     };
 
-    // Storing minPrice 
-    const price = filteredProducts?.map(element => element.currentPrice);
-    const minPrice = Math.min(...price);
+
 
     // Storing discounts
-    const discount = filteredProducts?.map(element => parseInt(element.discount));
-    const minDiscount = Math.min(...discount);
-
+    const discount = [];
+    products?.response?.productItems?.map(element => discount.push(element.discount));
+    const uniqueDiscount = Array.from(new Set(discount));
 
     // Storing Colors
     let colors = [];
-    filteredProducts?.forEach(element => colors.push(element.varients.color));
+    products?.response?.productItems?.forEach(element => colors.push(element.varients.color));
     const uniqueColors = Array.from(new Set(colors));
 
     // Storing Sizes
     let size = [];
-    filteredProducts?.forEach(element => size.push(element.varients.size));
+    products?.response?.productItems?.forEach(element => size.push(element.varients.size));
     const mergedSize = size.flat().filter((item, index, self) => self.indexOf(item) === index);
     const uniqueSize = Array.from(new Set(mergedSize));
 
-    // Storing categories
-    const categories = [];
-    filteredProducts?.forEach(element => categories.push(element.category));
-    const uniqueCategory = Array.from(new Set(categories));
+
 
     // Storing Ratings
     const ratings = [];
-    filteredProducts?.forEach(element => ratings.push(element.ratings));
+    products?.response?.productItems?.forEach(element => ratings.push(element.ratings));
     const uniqueRatings = Array.from(new Set(ratings));
+
+    // Storing Prices 
+    const prices = [];
+    products?.response?.productItems?.forEach(element => prices.push(element.currentPrice));
+    const uniquePrices = Array.from(new Set(prices));
+
 
     // Pushing all the pages in array
     const allPages = [];
@@ -79,32 +103,60 @@ const AllProducts = ({ productCategory }) => {
 
     // Handling Next Page
     const handleNextPage = () => {
-        window.scroll(0, 0)
+        navigate(`?category=${category}&page=${page + 1}`);
         setPage(page + 1);
     }
     // Handling Prev Page
     const handlePrevPage = () => {
-        window.scroll(0, 0)
+        navigate(`?category=${category}&page=${page - 1}`);
         setPage(page - 1);
     }
 
     // Handling Last Page
     const handleLastPage = () => {
-        window.scroll(0, 0);
-        setPage(products?.response?.totalPages)
+        navigate(`?category=${category}&page=${products?.response?.totalPages}`);
+        setPage(products?.response?.totalPages);
     }
 
     // Handling Other Page
     const handleOtherPage = (element) => {
-        window.scroll(0, 0);
+        navigate(`?category=${category}&page=${element}`);
         setPage(parseInt(element));
     }
+
+
+
+
+    // Handling CategoryFilter
+    const handleCategoryFilter = (element) => {
+        setCategory(element);
+    };
+
 
 
     useEffect(() => {
         setLoading(true);
         fetchData();
-    }, [page]);
+
+        // Setting the category
+        FetchProducts(`${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=${limit}`)
+            .then((response) => {
+                const categories = [];
+                response?.response?.productItems?.forEach(element => categories.push(element.category));
+                const uniqueCategory = Array.from(new Set(categories));
+                setAllCategory(uniqueCategory);
+            })
+            .catch(error => console.log(`Some error occurs while fetching data with: ${error}`));
+
+
+    }, [page, category]);
+
+
+    useEffect(() => {
+        if (pageQuery !== null) {
+            setPage(parseInt(pageQuery));
+        }
+    }, []);
 
 
 
@@ -117,8 +169,8 @@ const AllProducts = ({ productCategory }) => {
                 <div className="Option-wrapper w-full">
                     <div className="Option-items align-items">
                         <h2 className="option-title">Categories</h2>
-                        {uniqueCategory?.map((element, index) => (
-                            <div key={index} className="main-value flex align-items"><label htmlFor={`${index}`}>{element}</label><input type="checkbox" id={`${index}`} className="checkbox" /> </div>
+                        {allCategory?.map((element, index) => (
+                            <div key={index} onClick={() => { navigate(`?category=${element}`) }} className="main-value flex align-items"><label htmlFor={`${index}`}>{element}</label><input onChange={() => handleCategoryFilter(element)} type="checkbox" id={`${index}`} className="checkbox" /> </div>
                         ))}
                     </div>
                     <div className="Option-items align-items">
@@ -135,10 +187,9 @@ const AllProducts = ({ productCategory }) => {
                     </div>
                     <div className="Option-items align-items">
                         <h2 className="option-title">Price</h2>
-                        <div className="main-value flex align-items"><label htmlFor="priceOne">Under ₹{minPrice + 50}</label><input type="checkbox" id="priceOne" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label htmlFor="priceTwo">Under ₹{minPrice + 100}</label><input type="checkbox" id="priceTwo" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label htmlFor="priceThree">Under ₹{minPrice + 200}</label><input type="checkbox" id="priceThree" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label htmlFor="priceFour">Under ₹{minPrice + 400}</label><input type="checkbox" id="priceFour" className="checkbox" /> </div>
+                        {uniquePrices?.map((element, index) => (
+                            <div key={index} className="main-value flex align-items"><label htmlFor={`price-${index}`}>Under ₹{element}</label><input type="checkbox" id={`price-${index}`} className="checkbox" /> </div>
+                        ))}
                     </div>
                     <div className="Option-items align-items">
                         <h2 className="option-title">Color</h2>
@@ -150,10 +201,9 @@ const AllProducts = ({ productCategory }) => {
                     </div>
                     <div className="Option-items align-items">
                         <h2 className="option-title">Discount</h2>
-                        <div className="main-value flex align-items"><label htmlFor="discountOne">Under {minDiscount}%</label><input type="checkbox" id="discountOne" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label htmlFor="discountTwo">Under {minDiscount + 10}%</label><input type="checkbox" id="discountTwo" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label htmlFor="discountThree">Under {minDiscount + 15}%</label><input type="checkbox" id="discountThree" className="checkbox" /> </div>
-                        <div className="main-value flex align-items"><label htmlFor="discountFour">Under {minDiscount + 20}%</label><input type="checkbox" id="discountFour" className="checkbox" /> </div>
+                        {uniqueDiscount?.map((element, index) => (
+                            <div key={index} className="main-value flex align-items"><label htmlFor={`discount-${index}`}>Under {element}</label><input type="checkbox" id={`discount-${index}`} className="checkbox" /> </div>
+                        ))}
                     </div>
                     <div className="Option-items align-items">
                         <h2 className="option-title">Size</h2>
@@ -177,9 +227,9 @@ const AllProducts = ({ productCategory }) => {
                         <div className="main-loading-wrapper flex-box">
                             <img src="https://assets-v2.lottiefiles.com/a/53b80118-1161-11ee-b538-4f02e47c3050/EtQmNhvlO1.gif" />
                         </div>}
-                    <h4 className='result-title'>{filteredProducts.length} Results</h4>
+                    <h4 className='result-title'>{products?.response?.productItems?.length} Results</h4>
                     <div className="allProduct-wrapper">
-                        {filteredProducts?.map((element, index) => (
+                        {products?.response?.productItems?.map((element, index) => (
                             <Link className="productItems" key={index}>
                                 <div className="product-image">
                                     <img src={element?.images[0]} alt={`Product ${index}`} />
@@ -211,8 +261,6 @@ const AllProducts = ({ productCategory }) => {
                             <button disabled={page >= products?.response?.totalPages ? true : false} className={`pagination-btn next ${page >= products?.response?.totalPages ? "disabled-btn" : ""}`} onClick={handleNextPage}><FontAwesomeIcon icon={faArrowRight} /></button>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -220,8 +268,5 @@ const AllProducts = ({ productCategory }) => {
 }
 
 
-AllProducts.defaultProps = {
-    productCategory: "all"
-}
 
 export default AllProducts;
