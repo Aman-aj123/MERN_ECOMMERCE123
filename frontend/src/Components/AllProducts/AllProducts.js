@@ -40,13 +40,13 @@ const AllProducts = () => {
     const fetchData = async () => {
         setLoading(true);
 
-        let URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=1`;
+        let URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=3`;
 
         try {
             if (category === null || category === "all") {
-                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=1`;
+                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=3`;
             } else {
-                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products/category/${category}?page=${page}&limit=1`;
+                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products/category/${category}?page=${page}&limit=3`;
             }
 
             const response = await FetchProducts(URL);
@@ -169,6 +169,7 @@ const AllProducts = () => {
                 <div className="Option-wrapper w-full">
                     <div className="Option-items align-items">
                         <h2 className="option-title">Categories</h2>
+                        <div  onClick={() => { navigate(`?category=all`) }} className="main-value flex align-items"><label htmlFor={`all`}>All</label><input onChange={() => handleCategoryFilter("all")} type="checkbox" id={`all`} className="checkbox" /> </div>
                         {allCategory?.map((element, index) => (
                             <div key={index} onClick={() => { navigate(`?category=${element}`) }} className="main-value flex align-items"><label htmlFor={`${index}`}>{element}</label><input onChange={() => handleCategoryFilter(element)} type="checkbox" id={`${index}`} className="checkbox" /> </div>
                         ))}
