@@ -1,10 +1,9 @@
 import express from "express";
+import { AddToCart, FetchAllCarts } from "../Controllers/CartController.js";
+import authentication from "../Middlewares/authentication.js";
 const router = express.Router();
 
-import authentication from "../Middlewares/authentication.js";
-import { addProduct } from "../Controllers/CartController.js";
-
-router.post("/addproduct", authentication, addProduct);
-
+router.get("/", authentication, FetchAllCarts);
+router.post("/addcart", authentication, AddToCart);
 
 export default router;

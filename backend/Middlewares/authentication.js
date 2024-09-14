@@ -14,7 +14,6 @@ const authentication = async (req, res, next) => {
         }
 
         const data = jwt.verify(token, process.env.JWT_SECRET); 
-
         req.user = data.user; 
         
         next();
@@ -24,7 +23,7 @@ const authentication = async (req, res, next) => {
         return res.status(400).json({ sucess: false, error: "Invalied authentication token" });
     }
 
-};
+}; 
 
 
 export default authentication;

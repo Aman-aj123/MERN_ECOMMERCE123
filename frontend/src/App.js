@@ -7,8 +7,8 @@ import Header from "./Components/Header/Header";
 
 
 function App() {
-
-
+console.log(`URl is: ${process.env.REACT_APP_API_BASE_URL}`);
+console.log(`Aman URL Is: ${process.env.REACT_APP_API_LIMIT}`);
   return (
     <BrowserRouter>
       <ProductsState>

@@ -95,4 +95,6 @@ const getProductByQuery = async (req, res) => {
     };
 };
 
+
+
 export { getAllProduct, getProductByCategory, getProductByQuery };

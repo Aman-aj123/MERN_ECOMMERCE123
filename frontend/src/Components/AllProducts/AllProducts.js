@@ -10,6 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 
 const AllProducts = () => {
+ 
 
     const navigate = useNavigate();
 
@@ -40,13 +41,13 @@ const AllProducts = () => {
     const fetchData = async () => {
         setLoading(true);
 
-        let URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=3`;
+        let URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=${process.env.REACT_APP_API_LIMIT}`;
 
         try {
             if (category === null || category === "all") {
-                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=3`;
+                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=${process.env.REACT_APP_API_LIMIT}`;
             } else {
-                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products/category/${category}?page=${page}&limit=3`;
+                URL = `${process.env.REACT_APP_API_BASE_URL}/api/products/category/${category}?page=${page}&limit=${process.env.REACT_APP_API_LIMIT}`;
             }
 
             const response = await FetchProducts(URL);
