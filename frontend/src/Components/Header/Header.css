@@ -1,7 +1,12 @@
 #Top-header-wrapper {
     width: 100%;
-    height: 60px; 
+    height: 60px;
     background: white;
+    position: relative;
+}
+
+.Top-header {
+    gap: 10px;
 }
 
 
@@ -12,11 +17,12 @@
 .Top-header .logo a {
     color: var(--primary-color);
     text-decoration: none;
+    text-wrap: nowrap;
 }
 
 
 .Top-header .searchBar {
-    width: 47vw;
+    width: 100%;
     height: 40px;
     background: rgba(233, 131, 194, 0.162);
     border-radius: 8px;
@@ -68,12 +74,13 @@
     color: white;
 }
 
-.Top-header .left-menus .Cart-icon {
+.Top-header .Cart-icon {
     position: relative;
 }
-.left-menus .Cart-icon .cart-item-num{
+
+.Top-header .Cart-icon .cart-item-num {
     position: absolute;
-    top: -14px;
+    top: -10px;
     right: -8px;
     padding: 0px 6.30px;
     border-radius: 50%;
@@ -81,10 +88,26 @@
     color: white;
 }
 
-.Top-header .left-menus .main-search-icon {
+.Top-header .main-search-icon {
     display: none;
 }
- 
+
+
+/* Bottom navigation  */
+.bottom-navigation {
+    position: fixed;
+    display: none;
+    bottom: 0;
+    left: 0;
+    background: white;
+    box-shadow: 0 0 10px rgb(68, 68, 68);
+    border-bottom: 1px solid gainsboro;
+    height: 50px;
+    z-index: 9999;
+}
+
+
+
 /* Bottom header  */
 .Bottom-header {
     background: rgba(233, 131, 194, 0.162);
@@ -92,7 +115,7 @@
     overflow-x: auto;
 }
 
-.Bottom-header::-webkit-scrollbar{
+.Bottom-header::-webkit-scrollbar {
     display: none;
 }
 
@@ -110,3 +133,42 @@
     color: var(--primary-color);
 }
 
+
+@media(max-width: 724px) {
+    .Signup-box {
+        display: none;
+    }
+}
+
+.visible-searchbar {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    top: 10px !important; 
+}
+
+@media(max-width: 572px) {
+    .Signup-box {
+        display: none;
+    }
+
+    .searchBar {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        background: white !important;
+        width: 100%;
+        top: -70px;
+        left: 0;
+        transform: translateY(-20px);
+        transition:  .3s ease;
+    }
+
+    .Top-header {
+        padding: 0 10px;
+    }
+
+    .bottom-navigation{
+        display: flex;
+    }
+}

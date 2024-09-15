@@ -1,0 +1,61 @@
+/* Skelton loading  */
+.product-wrapper .skeleton {
+    background-color: #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .product-wrapper .skeleton-image {
+    width: 400px;
+    height: 400px;
+  }
+  
+  .product-wrapper .skeleton-thumbnail {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    margin-right: 5px;
+  }
+  
+  .product-wrapper .skeleton-title {
+    width: 60%;
+    height: 20px;
+  }
+  
+  .product-wrapper .skeleton-rating {
+    width: 40%;
+    height: 20px;
+  }
+  
+  .product-wrapper  .skeleton-price {
+    width: 30%;
+    height: 20px;
+  }
+  
+  .product-wrapper .skeleton-availability {
+    width: 50%;
+    height: 20px;
+  }
+  
+  .product-wrapper  .skeleton-size,
+  .product-wrapper .skeleton-quantity {
+    width: 80px;
+    height: 30px;
+  }
+  
+  .product-wrapper .skeleton-description {
+    width: 100%;
+    height: 60px;
+  }
+  
+  .product-wrapper .skeleton-about-item {
+    width: 100%;
+    height: 100px;
+  }
+  
+  .product-wrapper .skeleton-btn {
+    width: 150px;
+    height: 40px;
+    margin-top: 20px;
+  }
+  

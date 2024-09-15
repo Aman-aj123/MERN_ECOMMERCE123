@@ -39,7 +39,12 @@
 
 
  
- 
+ .Top-Products .product-heading{
+    color: rgb(44, 43, 43);
+    margin-top: 10px;
+    font-size: 26px;
+    padding-left: 10px;
+ }
 
 .Top-Products-Items h2 {
     font-size: 14px;

@@ -4,18 +4,18 @@ import HomePage from "./Pages/HomePage";
 import ProductsState from "./Context/ProductsState";
 import AllProductsPage from "./Pages/AllProductsPage";
 import Header from "./Components/Header/Header";
+import ShowProductPage from "./Pages/ShowProductPage";
 
 
 function App() {
-console.log(`URl is: ${process.env.REACT_APP_API_BASE_URL}`);
-console.log(`Aman URL Is: ${process.env.REACT_APP_API_LIMIT}`);
   return (
     <BrowserRouter>
       <ProductsState>
         <Header />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/products" element={<AllProductsPage />} />
+          <Route exact path="/" element={<HomePage />} />
+          <Route exact path="/products" element={<AllProductsPage />} />
+          <Route exact path="/products/:productId" element={<ShowProductPage />} />
         </Routes>
       </ProductsState>
     </BrowserRouter>

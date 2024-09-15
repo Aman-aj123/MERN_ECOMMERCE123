@@ -1,14 +1,23 @@
 .Main-wrapper {
     gap: 4px;
+    height: 100vh;
+    overflow: auto;
+}
+
+.Main-wrapper::-webkit-scrollbar {
+    display: none;
 }
 
 /*---------> Left Side  */
 .left-side {
+    position: relative;
     padding-top: 10px;
+    padding-left: 15px;
+    position: sticky;
+    top: 0;
     height: 100vh;
-    max-width: 280px;
     min-width: 207px;
-    width: 25%;
+    width: 20%;
     background: white;
     overflow-y: auto;
 }
@@ -45,6 +54,15 @@
     width: 15px;
 }
 
+.left-side svg{
+    position: absolute;
+    top: 10px; 
+    display: none;
+    right: 10px;
+    color: var(--primary-color);
+    font-size: 30px; 
+}
+
 .Option-items .main-value select {
     font-weight: 500;
     letter-spacing: .30px;
@@ -56,6 +74,24 @@
     letter-spacing: .30px;
 }
 
+.filter-options {
+    padding: 0 10px;
+}
+
+.filter-options svg{
+    color: var(--primary-color);
+    display: none;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.visible-filter-menu {
+    display: block !important;
+    position: fixed;
+    z-index: 99;
+}
+ 
+
 
 /*--------> Right Side  */
 .right-side {
@@ -63,10 +99,10 @@
     background: transparent;
 }
 
-.right-side .infinite-scroll-component__outerdiv{
+.right-side .infinite-scroll-component__outerdiv {
     width: 100%;
 }
- 
+
 
 #productContainer {
     padding-top: 20px;
@@ -92,7 +128,7 @@
     border: 1px solid gainsboro;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    padding: 8px 6px;
+    padding: 0px 6px;
     cursor: pointer;
     text-decoration: none;
     color: black;
@@ -145,6 +181,7 @@
 
 .product-ratings {
     letter-spacing: .30px;
+    padding-bottom: 3px;
 }
 
 
@@ -155,58 +192,7 @@
     margin-bottom: 8px;
 }
 
-
-
-/* Pagination  */
-.pagination {
-    width: fit-content;
-    margin: auto;
-    margin-top: 20px;
-}
-
-.pagination .pagination-title {
-    text-align: center;
-    font-size: 14px;
-    margin: 4px 0;
-    font-weight: 500;
-}
-
-.pagination-wrapper {
-    border: 2px solid black;
-    border-radius: 2px;
-}
-
-.pagination-wrapper .pagination-btn {
-    outline: none;
-    border: 1px solid rgb(17, 56, 211);
-    cursor: pointer;
-    transition: .1s ease-in-out;
-    padding: 8px 14px;
-    font-size: 17px;
-    font-weight: 500;
-    color: rgb(17, 56, 211);
-}
-
-.pagination-btn.next,
-.pagination-btn.prev {
-    color: black;
-    font-weight: 600;
-}
-
-.pagination-btn.active-page {
-    background: rgb(17, 56, 211);
-    color: white;
-}
-
-.pagination-wrapper .pagination-btn:hover {
-    opacity: .5;
-}
-
-.disabled-btn {
-    cursor: no-drop !important;
-    opacity: .2 !important;
-}
-
+ 
 
 .color-wrapper {
     gap: 6px;
@@ -239,7 +225,78 @@
 
 
 
+.infinite-loader img {
+    width: 70px;
+}
 
+
+/* Skeleton Loader */
+  .skelton-wrapper{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: flex-start;
+    width: 100%;
+} 
+
+.skeleton-card {
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 5px;
+    max-width: 300px;
+    width: 285px;
+    height: 350px;
+} 
+
+.skeleton-image {
+    background-color: #e0e0e0;
+    height: 200px;
+    width: 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-text {
+    padding: 10px;
+}
+
+.skeleton-title,
+.skeleton-price {
+    background-color: #e0e0e0;
+    height: 20px;
+    margin: 10px 0;
+    width: 80%;
+    animation: shimmer 1.5s infinite;
+}
+
+.skeleton-price {
+    width: 60%;
+}
+
+.skeleton-ratings {
+    background-color: #e0e0e0;
+    background-position: 100px;
+    height: 15px;
+    width: 50%;
+    margin-top: 10px;
+    animation: shimmer 1.5s infinite alternate;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -500px 0;
+        background: #c7c6c6;
+    }
+
+    100% {
+        background-position: 200px 0;
+    }
+}
+
+
+
+
+/*---------- Ending Defining Utility classes -------  */
 
 
 
@@ -307,4 +364,33 @@
     }
 }
 
+@media(max-width: 752px){
+    .filter-options svg{
+        display: block;
+    }
+    .left-side{
+        display: none;
+        width: 100%;
+    }
+    .left-side svg {
+        display: block;
+    }
+}
+@media(max-width: 425px){
+    #productContainer .allProduct-wrapper .productItems {
+        max-width: 200px;
+    }
+    #productContainer .allProduct-wrapper {
+        gap: 2px
+    }
+
+}
+
+@media(max-width: 548px){
+.skeleton-card{
+    width: 45%;
+}
+}
+
 /* --------- Ending Responsiveness  --------- */
+

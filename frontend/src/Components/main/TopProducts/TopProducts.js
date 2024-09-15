@@ -5,12 +5,14 @@ import { faArrowLeft, faArrowRight, faArrowsLeftRight } from "@fortawesome/free-
 
 import { useEffect, useState } from "react";
 import FetchProducts from "../../../Api/Fetch_Products";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 
-const TopProducts = ({ productCategory, productClass }) => {
+const TopProducts = ({ productCategory, productClass, productTitle }) => {
+    const navigate = useNavigate();
 
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -19,11 +21,7 @@ const TopProducts = ({ productCategory, productClass }) => {
     const limit = process.env.REACT_APP_API_LIMIT;
     const URL = `${process.env.REACT_APP_API_BASE_URL}/api/products?page=${page}&limit=${limit}`;
 
-    const limitArr = [];
 
-    for (let i = 0; i <= 10; i++) {
-        limitArr.push(i);
-    };
 
     const fetchData = async () => {
         const response = await FetchProducts(URL);
@@ -56,12 +54,17 @@ const TopProducts = ({ productCategory, productClass }) => {
     };
 
 
+    const handleClick = (url) => {
+        navigate(url);
+       window.scrollTo(0, 0)
+    }
 
 
 
 
     return (
         <div className="Top-Products">
+
             <div className="slider-buttons primary-width">
                 <div className="slider-icn-wrapper flex">
                     <FontAwesomeIcon onClick={handlePrev} icon={faArrowLeft} className={`slider-btn ${page <= 1 ? "disabled-btn" : ""}`} />
@@ -72,9 +75,10 @@ const TopProducts = ({ productCategory, productClass }) => {
                 </div>
             </div>
 
+            <h1 className="product-heading">{productTitle}</h1>
             <div className="Top-Products-wrapper mx-auto primary-width flex">
                 {filteredProducts?.map((item, index) => (
-                    <div key={index} className={`Top-Products-Items ${productClass}`}>
+                    <div onClick={() => { handleClick(`/products/${item.title}`) }} key={index} className={`Top-Products-Items ${productClass}`}>
                         <img className="w-full product-img" src={item?.images[0]} />
                         <h2 className="w-full product-title">{item?.title.slice(0, 30)}...</h2>
                         <div className="price-wrapper flex">
@@ -90,7 +94,7 @@ const TopProducts = ({ productCategory, productClass }) => {
 
                 {loading &&
                     <div className="loading-wrapper flex">
-                        {limitArr.map((element, index) => (
+                        {Array(20).fill().map((_, index) => (
                             <img key={index} className="loading-img" src="https://assets-v2.lottiefiles.com/a/53b80118-1161-11ee-b538-4f02e47c3050/EtQmNhvlO1.gif" />
                         ))}
                     </div>
@@ -105,7 +109,8 @@ const TopProducts = ({ productCategory, productClass }) => {
 
 TopProducts.defaultProps = {
     productCategory: "all",
-    productClass: ""
+    productClass: "",
+    productTitle: ""
 }
 
 
