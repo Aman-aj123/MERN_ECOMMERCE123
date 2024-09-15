@@ -1,12 +1,16 @@
 .Main-wrapper {
-    gap: 8px;
+    gap: 4px;
 }
 
 /*---------> Left Side  */
 .left-side {
     padding-top: 10px;
+    height: 100vh;
+    max-width: 280px;
+    min-width: 207px;
     width: 25%;
     background: white;
+    overflow-y: auto;
 }
 
 .left-side .Option-items {
@@ -55,9 +59,14 @@
 
 /*--------> Right Side  */
 .right-side {
-    width: 80%;
+    width: 100%;
     background: transparent;
 }
+
+.right-side .infinite-scroll-component__outerdiv{
+    width: 100%;
+}
+ 
 
 #productContainer {
     padding-top: 20px;

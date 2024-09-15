@@ -8,9 +8,10 @@ import FetchProducts from "../../Api/Fetch_Products"
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const AllProducts = () => {
- 
+
 
     const navigate = useNavigate();
 
@@ -20,21 +21,22 @@ const AllProducts = () => {
 
     // Extracting productCategory from the url
     const productCategory = searchParams.get('category');
-    // Extracting pageQuery from the url
-    const pageQuery = searchParams.get("page");
 
-   
+
+
 
     //----> Defining useState variables
     const [products, setProducts] = useState([]);
+    const [allProducts, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [page, setPage] = useState(pageQuery === null ? 1 : parseInt(pageQuery));
     const limit = process.env.REACT_APP_API_LIMIT;
 
     const [category, setCategory] = useState(productCategory === null ? "all" : productCategory);
     const [allCategory, setAllCategory] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
 
- 
+
 
 
     //-------> Fetching products data from api
@@ -51,7 +53,13 @@ const AllProducts = () => {
             }
 
             const response = await FetchProducts(URL);
-            setProducts(response);
+            if (response?.response.productItems.length === 0) {
+                setHasMore(false);
+            } else {
+                setProducts(response);
+                setAllProducts(prevProducts => [...prevProducts, ...response?.response.productItems]);
+                console.log(allProducts);
+            }
 
 
             setLoading(false);
@@ -92,38 +100,15 @@ const AllProducts = () => {
     const uniquePrices = Array.from(new Set(prices));
 
 
-    // Pushing all the pages in array
-    const allPages = [];
-    for (let i = 0; i <= parseInt(products?.response?.totalPages); i++) {
-        allPages.push(i);
+    const fetchMoreData = () => {
+        setPage(prevPage => prevPage + 1);
+        console.log(page)
+        fetchData();
     }
 
-    // taking 3 pages numbers
-    const slicedPages = allPages.slice(1, 4);
 
 
-    // Handling Next Page
-    const handleNextPage = () => {
-        navigate(`?category=${category}&page=${page + 1}`);
-        setPage(page + 1);
-    }
-    // Handling Prev Page
-    const handlePrevPage = () => {
-        navigate(`?category=${category}&page=${page - 1}`);
-        setPage(page - 1);
-    }
 
-    // Handling Last Page
-    const handleLastPage = () => {
-        navigate(`?category=${category}&page=${products?.response?.totalPages}`);
-        setPage(products?.response?.totalPages);
-    }
-
-    // Handling Other Page
-    const handleOtherPage = (element) => {
-        navigate(`?category=${category}&page=${element}`);
-        setPage(parseInt(element));
-    }
 
 
 
@@ -136,6 +121,8 @@ const AllProducts = () => {
 
 
     useEffect(() => {
+      
+        setPage(1)
         setLoading(true);
         fetchData();
 
@@ -150,14 +137,10 @@ const AllProducts = () => {
             .catch(error => console.log(`Some error occurs while fetching data with: ${error}`));
 
 
-    }, [page, category]);
+    }, [category]);
 
 
-    useEffect(() => {
-        if (pageQuery !== null) {
-            setPage(parseInt(pageQuery));
-        }
-    }, []);
+
 
 
 
@@ -170,7 +153,7 @@ const AllProducts = () => {
                 <div className="Option-wrapper w-full">
                     <div className="Option-items align-items">
                         <h2 className="option-title">Categories</h2>
-                        <div  onClick={() => { navigate(`?category=all`) }} className="main-value flex align-items"><label htmlFor={`all`}>All</label><input onChange={() => handleCategoryFilter("all")} type="checkbox" id={`all`} className="checkbox" /> </div>
+                        <div onClick={() => { navigate(`?category=all`) }} className="main-value flex align-items"><label htmlFor={`all`}>All</label><input onChange={() => handleCategoryFilter("all")} type="checkbox" id={`all`} className="checkbox" /> </div>
                         {allCategory?.map((element, index) => (
                             <div key={index} onClick={() => { navigate(`?category=${element}`) }} className="main-value flex align-items"><label htmlFor={`${index}`}>{element}</label><input onChange={() => handleCategoryFilter(element)} type="checkbox" id={`${index}`} className="checkbox" /> </div>
                         ))}
@@ -230,39 +213,36 @@ const AllProducts = () => {
                             <img src="https://assets-v2.lottiefiles.com/a/53b80118-1161-11ee-b538-4f02e47c3050/EtQmNhvlO1.gif" />
                         </div>}
                     <h4 className='result-title'>{products?.response?.productItems?.length} Results</h4>
-                    <div className="allProduct-wrapper">
-                        {products?.response?.productItems?.map((element, index) => (
-                            <Link className="productItems" key={index}>
-                                <div className="product-image">
-                                    <img src={element?.images[0]} alt={`Product ${index}`} />
-                                </div>
-                                <div className="product-text">
-                                    <p className="product-discount">{element?.discount} Off</p>
-                                    <h2 className="product-title">{element.title.slice(0, 50)}...</h2>
-                                    <div className="price-wrapper flex">
-                                        <h3 className="product-price">₹ {element.currentPrice}</h3>
-                                        <h3 className="product-price oldPrice">₹ {element.oldPrice}</h3>
-                                    </div>
-                                    <p className="product-ratings">{element?.ratings} ratings</p>
-                                </div>
-                            </Link>
-                        ))
+                    <InfiniteScroll
+                        dataLength={allProducts.length
                         }
-                    </div>
+                        next={fetchMoreData}
+                        hasMore={hasMore}
+                        loader={<h4>Loading...</h4>}
+                    >
+                        <div className="allProduct-wrapper">
 
-                    {/* Pagination  */}
-                    <div className='pagination'>
-                        <h4 className="pagination-title">Pagination</h4>
-                        <div className="pagination-wrapper">
-                            <button disabled={page <= 1 ? true : false} className={`pagination-btn next ${page <= 1 ? "disabled-btn" : ""}`} onClick={handlePrevPage}><FontAwesomeIcon icon={faArrowLeft} /></button>
-                            {slicedPages?.map((element, index) => (
-                                <button onClick={() => { handleOtherPage(element) }} className={`pagination-btn ${element === products?.response?.currentPage ? "active-page" : ""}`} key={index}>{element}</button>
+                            {allProducts?.map((element, index) => (
+                                <Link className="productItems" key={index}>
+                                    <div className="product-image">
+                                        <img src={element?.images[0]} alt={`Product ${index}`} />
+                                    </div>
+                                    <div className="product-text">
+                                        <p className="product-discount">{element?.discount} Off</p>
+                                        <h2 className="product-title">{element.title.slice(0, 50)}...</h2>
+                                        <div className="price-wrapper flex">
+                                            <h3 className="product-price">₹ {element.currentPrice}</h3>
+                                            <h3 className="product-price oldPrice">₹ {element.oldPrice}</h3>
+                                        </div>
+                                        <p className="product-ratings">{element?.ratings} ratings</p>
+                                    </div>
+                                </Link>
                             ))
                             }
-                            <button onClick={handleLastPage} className='pagination-btn'>... {products?.response?.totalPages}</button>
-                            <button disabled={page >= products?.response?.totalPages ? true : false} className={`pagination-btn next ${page >= products?.response?.totalPages ? "disabled-btn" : ""}`} onClick={handleNextPage}><FontAwesomeIcon icon={faArrowRight} /></button>
                         </div>
-                    </div>
+                    </InfiniteScroll>
+
+
                 </div>
             </div>
         </div>
